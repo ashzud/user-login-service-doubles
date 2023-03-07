@@ -10,4 +10,22 @@ class User
     {
         $this->userName = $userName;
     }
+
+    /**
+     * @param string $userName
+     */
+    public function setUserName(string $userName): void
+    {
+        $this->userName = $userName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName(): string
+    {
+        return $this->userName;
+    }
+
+
 }
