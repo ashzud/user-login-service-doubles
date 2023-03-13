@@ -2,14 +2,21 @@
 
 namespace UserLoginService\Application;
 
-use UserLoginService\Domain\User;
 use Exception;
+use UserLoginService\Domain\User;
 use UserLoginService\Infrastructure\FacebookSessionManager;
+use UserLoginService\Tests\Doubles\FacebookSessionManagerStub;
 
 
 class UserLoginService
 {
     private array $loggedUsers = [];
+    private FacebookSessionManager $FBSessionManager;
+
+    public function __construct($FBSessionManager)
+    {
+        $this->FBSessionManager = $FBSessionManager;
+    }
 
     public function manualLogin(User $user): void
     {
@@ -28,8 +35,18 @@ class UserLoginService
 
     public function getExternalSessions(): int
     {
-        $FBSessionManager = new FacebookSessionManager();
 
-        return $FBSessionManager->getSessions();
+        return $this->FBSessionManager->getSessions();
+    }
+
+    public function login(string $username, string $password): string
+    {
+
+        $correctLogin = $this->FBSessionManager->login($username,$password);
+
+        if ($correctLogin)
+            return "Login correcto";
+        else
+            return "Login incorrecto";
     }
 }
