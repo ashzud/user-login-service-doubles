@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use UserLoginService\Application\UserLoginService;
 use UserLoginService\Domain\User;
 use Exception;
+use UserLoginService\Infrastructure\FacebookSessionManagerStub;
 
 final class UserLoginServiceTest extends TestCase
 {
@@ -45,7 +46,11 @@ final class UserLoginServiceTest extends TestCase
      */
     public function checkNumberOfActiveSessions()
     {
-        
+        $FBSessionManager = new FacebookSessionManagerStub();
+
+        $numberOfSessions = $FBSessionManager->getSessions();
+
+        $this->assertEquals(35, $numberOfSessions);
     }
 
 }
