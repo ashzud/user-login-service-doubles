@@ -44,8 +44,11 @@ class UserLoginService
 
         $correctLogin = $this->FBSessionManager->login($username,$password);
 
-        if ($correctLogin)
+        if ($correctLogin) {
+            $user = new User($username);
+            $this->manualLogin($user);
             return "Login correcto";
+        }
         else
             return "Login incorrecto";
     }
