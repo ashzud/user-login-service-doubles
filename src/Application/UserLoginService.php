@@ -11,11 +11,11 @@ use UserLoginService\Tests\Doubles\FacebookSessionManagerStub;
 class UserLoginService
 {
     private array $loggedUsers = [];
-    private FacebookSessionManager $FBSessionManager;
+    private SessionManager $sessionManager;
 
-    public function __construct($FBSessionManager)
+    public function __construct($sessionManager)
     {
-        $this->FBSessionManager = $FBSessionManager;
+        $this->sessionManager = $sessionManager;
     }
 
     public function manualLogin(User $user): void
@@ -36,13 +36,13 @@ class UserLoginService
     public function getExternalSessions(): int
     {
 
-        return $this->FBSessionManager->getSessions();
+        return $this->sessionManager->getSessions();
     }
 
     public function login(string $username, string $password): string
     {
 
-        $correctLogin = $this->FBSessionManager->login($username,$password);
+        $correctLogin = $this->sessionManager->login($username,$password);
 
         if ($correctLogin) {
             $user = new User($username);
@@ -51,5 +51,20 @@ class UserLoginService
         }
         else
             return "Login incorrecto";
+    }
+
+    public function logout(User $user): string
+    {
+        if (in_array($user, $this->loggedUsers, true))
+        {
+            $this->sessionManager->logout($user->getUserName());
+            $indexToRemove = array_search($user, $this->loggedUsers);
+            unset($this->loggedUsers[$indexToRemove]);
+            return "Ok";
+        }
+        else
+        {
+            return "User not found";
+        }
     }
 }
